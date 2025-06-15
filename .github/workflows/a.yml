@@ -26,7 +26,7 @@ jobs:
 
     - name: Pybind11 install
       run: > 
-        brew install pybind11
+        git clone https://github.com/pybind/pybind11 submod
         
     - name: Configure CMake
       run: >
