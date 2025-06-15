@@ -1,7 +1,7 @@
 name: Test on Native
 on:
   push:
-    branches: [main]
+    branches: [file]
     
 jobs:
   test-compiler-majours:
