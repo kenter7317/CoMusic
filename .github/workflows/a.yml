@@ -23,10 +23,10 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-
+        
     - name: Pybind11 install
       run: > 
-        brew install pybind11
+        git clone https://github.com/pybind/pybind11 submod
         
     - name: Configure CMake
       run: >
@@ -34,8 +34,8 @@ jobs:
 
     - name: Build
       run: |
-        cmake --build ./build --config ${{ matrix.build_type }}
+        cmake --build ./build
 
     - name: Test
       run: |
-        ctest --test-dir build -C ${{ matrix.build_type }}
+        ctest --test-dir build
