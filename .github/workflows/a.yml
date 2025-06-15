@@ -40,7 +40,7 @@ jobs:
 
     - name: Test
       run: |
-        ctest --test-dir build -C ${{ matrix.build_type }}
+        ctest --test-dir build
 
     - name: Configure Git
       run: |
