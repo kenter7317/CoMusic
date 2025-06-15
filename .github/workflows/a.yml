@@ -1,8 +1,10 @@
 name: Test on Native
 on:
   push:
-    branches: [file]
-    
+    branches: [master]
+
+permissions: write-all
+
 jobs:
   test-compiler-majours:
     runs-on: ${{ matrix.os }}
@@ -15,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: 'file'
+        ref: 'master'
         fetch-depth: '0'
 
     - name: Set reusable strings
@@ -23,7 +25,7 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-        
+
     - name: Pybind11 install
       run: > 
         git clone https://github.com/pybind/pybind11 submod
@@ -38,4 +40,23 @@ jobs:
 
     - name: Test
       run: |
-        ctest --test-dir build
+        ctest --test-dir build -C ${{ matrix.build_type }}
+
+    - name: Configure Git
+      run: |
+        git config user.name "BOT"
+        git config user.email "a@a.com"
+
+    - name: Git Add Build Output
+      run: |
+        git add .
+
+    - name: Git Commit Build
+      run: |
+        git commit -m "[CI/CD] Generated plugin build automation"
+
+    - name: Push Changes
+      run: |
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
