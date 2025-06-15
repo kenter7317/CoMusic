@@ -4,6 +4,7 @@ from PyQt5.QtCore import QUrlQuery, QUrl, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QListWidget, QListView, QDockWidget
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 import sys
+import VideoList
 
 # Window Scheme
 class MyWindow(QMainWindow):
@@ -38,6 +39,9 @@ class MyWindow(QMainWindow):
 
 class DiscordBot():
     def __init__(self): # TODO
+        pass
+    pass
+
 app = QApplication(sys.argv)
 window = MyWindow()
 window.show()
