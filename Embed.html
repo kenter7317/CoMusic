@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html>
-  <body>
-    <div id="player"></div>
-
+<html lang="ko">
+<head>
+  <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+  <title></title>
+</head>
+<body>
+<div id="player"></div>
     <script>
+       var backend;  // PyQt의 Backend 객체
+        new QWebChannel(qt.webChannelTransport, function(channel) {
+          backend = channel.objects.backend;
+        });
+
       var tag = document.createElement('script');
 
       tag.src = "https://www.youtube.com/iframe_api";
@@ -32,9 +40,8 @@
 
       var done = false;
       function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.PLAYING && !done) {
-          setTimeout(stopVideo, 6000);
-          done = true;
+        if (backend) {
+          backend.receiveMessage("YT 상태: " + state);  // Python으로 전달
         }
       }
       function stopVideo() {

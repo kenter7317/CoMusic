@@ -1,10 +1,21 @@
 import os
 
-from PyQt5.QtCore import QUrlQuery, QUrl, Qt
+from PyQt5.QtCore import QUrlQuery, QUrl, Qt, QObject, pyqtSlot, pyqtSignal
+from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QListWidget, QListView, QDockWidget
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 import sys
 import VideoList
+
+class Backend(QObject):
+    @pyqtSlot(str)
+    def receiveMessage(self, msg):
+        print(f"JS로부터 메시지 받음: {msg}")
+
+    # Python에서 JS로 신호 보낼 수도 있음
+    sendMessage = pyqtSignal(str)
+
+
 
 # Window Scheme
 class MyWindow(QMainWindow):
@@ -20,6 +31,11 @@ class MyWindow(QMainWindow):
         exit_action = QAction("종료", self)
         exit_action.triggered.connect(self.close)
         menu_file.addAction(exit_action)
+
+        self.channel = QWebChannel()
+        self.backend = Backend()
+        self.channel.registerObject('backend', self.backend)
+        browser.page().setWebChannel(self.channel)
 
         list_dock = QDockWidget(self)
         list_widget = QListView(self)
