@@ -11,3 +11,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 file(GLOB_RECURSE VideoList-src ${PROJECT_SOURCE_DIR}/VideoList/*)
 pybind11_add_module(VideoList ${VideoList-src})
 
+if(WIN32)
+	add_custom_command(
+		OUTPUT VideoList 
+		COMMAND cmake -E copy *.pyd ..
+		WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/build
+	)
+endif()
