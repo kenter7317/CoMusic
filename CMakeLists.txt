@@ -1,7 +1,3 @@
-if(WIN32)
-	option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
-endif()
-
 cmake_minimum_required(VERSION 3.10)
 project(CoMusic)
 
