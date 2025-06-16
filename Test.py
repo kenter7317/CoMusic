@@ -1,3 +1,3 @@
 import VideoList
-print(dir(my_module))
+print(dir(VideoList))
 print("Hello World!")
