@@ -32,7 +32,7 @@ class MyWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         menu_file.addAction(exit_action)
 
-        self.channel = QWebChannel()
+        self.channel = QWebChannel(self)
         self.backend = Backend()
         self.channel.registerObject('backend', self.backend)
         browser.page().setWebChannel(self.channel)
