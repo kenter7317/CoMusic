@@ -39,6 +39,9 @@ jobs:
     - name: Pybind11 install
       run: > 
         git clone https://github.com/pybind/pybind11 submod
+
+    - name: pip
+      run: pip install pybind11
         
     - name: Configure CMake
       run: >
