@@ -13,6 +13,16 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: windows-latest
+            gen: "Visual Studio 17 2022"
+
+          - os: ubuntu-latest
+            gen: "Ninja"
+
+          - os: macos-latest
+            gen: "Ninja"
+            
 
     steps:
     - uses: actions/checkout@v4
@@ -32,7 +42,7 @@ jobs:
         
     - name: Configure CMake
       run: >
-        cmake -B build -S . -GNinja
+        cmake -B build -S . -G ${{matrix.gen}}
 
     - name: Build
       run: |
