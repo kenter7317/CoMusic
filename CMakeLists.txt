@@ -13,7 +13,7 @@ file(GLOB_RECURSE VideoList-src ${PROJECT_SOURCE_DIR}/VideoList/*)
 pybind11_add_module(VideoList ${VideoList-src})
 
 if(WIN32)
-	set(SRC ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE})
+	set(SRC ${PROJECT_SOURCE_DIR}/Debug)
 	set(DEST ${PROJECT_SOURCE_DIR})
  	configure_file(${PROJECT_SOURCE_DIR}/a.ps1.in ${PROJECT_SOURCE_DIR}/a.ps1)
  
