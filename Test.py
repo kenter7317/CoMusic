@@ -3,5 +3,5 @@ import os
 sys.path.append(os.getcwd())
 import VideoList
 
-print(VideoList.ErrVal())
+print(dir(VideoList))
 print("Hello World!")
