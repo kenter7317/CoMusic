@@ -1,7 +1,7 @@
 name: Test on Native
 on:
   push:
-    branches: [master]
+    branches: [file]
 
 permissions: write-all
 
@@ -13,11 +13,21 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: windows-latest
+            gen: "\"Visual Studio 17 2022\""
+
+          - os: ubuntu-latest
+            gen: "Ninja"
+
+          - os: macos-latest
+            gen: "Ninja"
+            
 
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: 'master'
+        ref: 'file'
         fetch-depth: '0'
 
     - name: Set reusable strings
@@ -29,10 +39,14 @@ jobs:
     - name: Pybind11 install
       run: > 
         git clone https://github.com/pybind/pybind11 submod
+
+    - name: pip
+      run: pip install pybind11
         
     - name: Configure CMake
       run: >
-        cmake -B build -S . -GNinja
+        cmake -B build -S . -G ${{matrix.gen}}
+        -D CMAKE_BUILD_TYPE=Release
 
     - name: Build
       run: |
@@ -59,6 +73,6 @@ jobs:
       run: |
         git fetch
         git pull
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic master
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic file
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

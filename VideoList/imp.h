@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#define unsigned unsigned int
+
 const std::string &LastError();
 unsigned ErrVal(); /** returns -1 */
 unsigned GetCap();
