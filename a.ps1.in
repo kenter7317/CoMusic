@@ -1,7 +1,0 @@
-$source = "@SRC@"
-$destination = "@DEST@"
-
-Get-ChildItem -Path $source -File | ForEach-Object {
-    Copy-Item -Path $_.FullName -Destination $destination
-}
-Write-Host "Done."

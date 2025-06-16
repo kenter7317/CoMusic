@@ -1,0 +1,10 @@
+set "src=@SRC@"
+set "dest=@DEST@"
+
+if not exist %dest% mkdir %dest%
+
+for %%F in ("%src%"\*) do (
+  copy "%%F" "%dest%" > nul 
+)
+
+echo Done
