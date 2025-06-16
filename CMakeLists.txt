@@ -13,7 +13,7 @@ file(GLOB_RECURSE VideoList-src ${PROJECT_SOURCE_DIR}/VideoList/*)
 pybind11_add_module(VideoList ${VideoList-src})
 
 
-if(WIN32)
+if(WIN32 AND OFF)
 	add_custom_command(
 		TARGET VideoList 
 		POST_BUILD
