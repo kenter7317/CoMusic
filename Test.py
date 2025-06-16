@@ -1,3 +1,3 @@
 import VideoList
-print(VideoList.ErrVal())
+print(dir(my_module))
 print("Hello World!")
