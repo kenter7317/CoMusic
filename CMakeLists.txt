@@ -20,9 +20,7 @@ if(WIN32)
 	add_custom_command(
 		TARGET VideoList 
 		POST_BUILD
-		COMMAND ${PROJECT_SOURCE_DIR}/a.bat
-  	COMMAND ${CMAKE_COMMAND} -E remove ${PROJECT_SOURCE_DIR} a.bat
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_SOURCE_DIR}/Debug
+		COMMAND start ${PROJECT_SOURCE_DIR}/a.bat
 		WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
 	)
 endif()

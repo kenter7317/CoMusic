@@ -8,3 +8,4 @@ for %%F in ("%src%"\*) do (
 )
 
 echo Done
+exit
