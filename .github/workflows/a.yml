@@ -41,7 +41,7 @@ jobs:
         git clone https://github.com/pybind/pybind11 submod
         
     - name: Configure CMake
-      run: |
+      run: >
         cmake -B build -S . -G ${{matrix.gen}}
         -D CMAKE_BUILD_TYPE=Release
 
