@@ -1,3 +1,7 @@
+if(WIN32)
+	option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+endif()
+
 cmake_minimum_required(VERSION 3.10)
 project(CoMusic)
 
@@ -13,11 +17,4 @@ file(GLOB_RECURSE VideoList-src ${PROJECT_SOURCE_DIR}/VideoList/*)
 pybind11_add_module(VideoList ${VideoList-src})
 
 
-if(WIN32 AND OFF)
-	add_custom_command(
-		TARGET VideoList 
-		POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/*.pyd ${PROJECT_SOURCE_DIR} 
-		WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-	)
-endif()
+
