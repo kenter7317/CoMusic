@@ -1,6 +1,8 @@
 #include "./imp.hh"
 #include <pybind11/pybind11.h>
 
+namespace py = pybind11;
+
 PYBIND11_MODULE(VideoList, m) {
   m.doc() = "Video List";
   m.def("LastError", &LastError, "Last Error as string");
