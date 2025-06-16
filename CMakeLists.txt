@@ -13,11 +13,10 @@ pybind11_add_module(VideoList ${VideoList-src})
 
 
 if(WIN32)
-	file(GLOB v ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/*.pyd)
 	add_custom_command(
 		TARGET VideoList 
 		POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy ${v} ${PROJECT_SOURCE_DIR} 
+		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/*.pyd ${PROJECT_SOURCE_DIR} 
 		WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
 	)
 endif()
