@@ -35,7 +35,7 @@ jobs:
         python-version: 3.13
         
     - name: Configure CMake
-      run: cmake -B build -S./VideoList/VidList -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DOUTDIR=../lib
+      run: cmake -B build -S./VideoList/VidList -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DOUTDIR="../lib"
 
     - name: Build
       run: |
