@@ -7,7 +7,7 @@ permissions: write-all
 
 jobs:
   test-compiler-majours:
-    runs-on: self-hosted // temp
+    runs-on: self-hosted
 
     strategy:
       fail-fast: false
