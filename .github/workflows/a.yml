@@ -1,7 +1,7 @@
 name: Test on Native
 on:
   push:
-    branches: [separation]
+    branches: [test-workflow]
 
 permissions: write-all
 
@@ -11,14 +11,12 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-
+      
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: 'master'
-        fetch-depth: '0'
+        ref: 'origin/master'
+        fetch-depth: '1'
 
     - name: Set reusable strings
       id: strings
