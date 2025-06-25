@@ -1,7 +1,7 @@
 name: Test on Native
 on:
   push:
-    branches: [file]
+    branches: [master]
 
 permissions: write-all
 
