@@ -7,7 +7,7 @@ permissions: write-all
 
 jobs:
   test-compiler-majours:
-    runs-on: self-hosted
+    runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
