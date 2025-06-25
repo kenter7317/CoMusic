@@ -1,4 +1,4 @@
-from .build import VList
+from .lib import VList
 
 sz_t    = int
 idx_t   = int
