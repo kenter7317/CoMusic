@@ -27,7 +27,7 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
     - name: Pybind11 install
       run: > 
-        git clone https://github.com/pybind/pybind11 ./VideoList/VidList
+        git clone https://github.com/ae3f-devel/VidList ./VideoList/VidList
         
     - name: Configure CMake
       run: >
