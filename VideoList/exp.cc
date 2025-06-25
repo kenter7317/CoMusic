@@ -1,5 +1,6 @@
 #include "./imp.hh"
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 
@@ -7,8 +8,8 @@ PYBIND11_MODULE(VideoList, m) {
   m.doc() = "Video List";
   m.def("LastError", &LastError, "Last Error as string");
   m.def("ErrVal", &ErrVal, "Error value. Returns unsigned -1.");
-  m.def("Capacity", &GetCap, "Get current capacity.");
-  m.def("SetCapacity", &SetCap, "Set current capacity.");
+  m.def("GetCap", &GetCap, "Get current capacity.");
+  m.def("SetCap", &SetCap, "Set current capacity.");
   m.def("Append", &Append, "Append a string");
   m.def("Remove", &Remove, "Remove from first index to last index.");
   m.def("Swap", &Swap, "Swap the values of two.");
@@ -35,11 +36,11 @@ static str *LPSTR = 0;
 #define LSTR(i) LPSTR[LPSTRIDX(i)]
 
 unsigned GetCap() { return CAP; }
-void SetCap(unsigned sz) {
+unsigned SetCap(unsigned sz) {
   str *d = new str[sz]();
   if (!d) {
     LastErrMsg = "[LPSTRRESIZE] Resizing has failed.";
-    return;
+    return -1;
   }
 
   SIZE = sz < SIZE ? sz : SIZE;
@@ -54,7 +55,10 @@ void SetCap(unsigned sz) {
   if (LPSTR)
     delete LPSTR;
   LPSTR = d;
+
+  return sz;
 }
+
 unsigned Size() { return SIZE; }
 unsigned Append(const char *str) {
   if (SIZE == CAP) {
@@ -75,18 +79,19 @@ unsigned Append(const char *str) {
 }
 
 unsigned Remove(unsigned begin, unsigned end) {
-  if (begin > end)
-    return 0;
-
   if (!LPSTR) {
     SIZE = CAP = IDX = 0;
     LastErrMsg = "[Remove] LPSTR is null.";
     return -1;
   }
 
-  for (unsigned i = 0; i < SIZE - end; i++) {
-    const unsigned ii = i + CAP;
+  if (SIZE < end) {
+    LastErrMsg = "[Remove] end index is too large compared to SIZE(" +
+                 std::to_string(SIZE) + ")";
+    return -1;
+  }
 
+  for (unsigned i = begin; i < end; i++) {
     /*
      * end - 1 == EIDX
      * begin == BIDX
@@ -94,11 +99,14 @@ unsigned Remove(unsigned begin, unsigned end) {
      * FEE: (EIDX - BIDX) + 1 -> end - BIDX
      * [1][0][0][1][1]
      */
-    LSTR(ii).swap(LSTR(ii - (end - begin)));
+    if (i + end - begin < SIZE)
+      LSTR(i).swap(LSTR(i + end - begin));
+    else
+      LSTR(i).swap(LSTR(SIZE));
   }
 
-  SIZE = end - begin;
-  return SIZE - end;
+  SIZE -= end - begin;
+  return SIZE;
 }
 unsigned Swap(unsigned a, unsigned b) {
   if (a >= SIZE) {
@@ -152,11 +160,19 @@ const std::string Get(unsigned i) {
   return *LSTR(i).a;
 }
 
-void Pop() {
+unsigned Pop() {
+  if (!SIZE) {
+    LastErrMsg = "[Pop] List is already blank";
+    return -1;
+  }
+
   IDX++;
   if (CAP == IDX) {
     IDX = 0;
   }
+  SIZE--;
+
+  return 0;
 }
 
 const std::vector<std::string> &GetAll() {
@@ -169,10 +185,11 @@ const std::vector<std::string> &GetAll() {
     return D;
   }
 
-  if (SIZE > D.size())
+  if (SIZE != D.size())
     D.resize(SIZE);
 
   for (unsigned i = 0; i < SIZE; i++) {
+    D[i] = LSTR(i).a ? *LSTR(i).a : "";
   }
 
   return D;

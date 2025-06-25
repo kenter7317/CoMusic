@@ -18,7 +18,7 @@ struct str {
   inline void swap(str &_a) {
     std::string *tmp = a;
     this->a = _a.a;
-    _a.a = a;
+    _a.a = tmp;
   }
 
   inline str(const str &&_a) {

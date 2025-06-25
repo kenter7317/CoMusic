@@ -3,3 +3,5 @@ build/
 submod/
 Debug/*
 a.bat
+
+__pycache__

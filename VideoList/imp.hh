@@ -8,12 +8,12 @@
 const std::string &LastError();
 unsigned ErrVal(); /** returns -1 */
 unsigned GetCap();
-void SetCap(unsigned);
+unsigned SetCap(unsigned);
 unsigned Append(const char *);
 unsigned Remove(unsigned, unsigned);
 unsigned Swap(unsigned, unsigned);
 unsigned Set(unsigned, const char *);
-void Pop();
+unsigned Pop();
 
 const std::string Get(unsigned);
 const std::vector<std::string> &GetAll();
