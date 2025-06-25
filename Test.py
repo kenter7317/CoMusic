@@ -1,10 +1,12 @@
-from VideoList import VidList
+import VidList
+import VideoList
 
 print(dir(VidList))
+print(dir(VideoList))
 print(VidList.LastError())
 
 # this is an error value.
-print(VidList.ErrVal())
+print(VidList.ErrVal()) 
 print(VidList.GetCapacity())
 print(VidList.SetCapacity(14))
 print(f"GetCapacity: {VidList.GetCapacity()}")
@@ -42,6 +44,6 @@ print(VidList.Pop())
 print(VidList.GetAll())
 
 # if it gets an error, this is expected.
-print(VidList.Pop())
+print(VidList.Pop()) 
 print(VidList.GetAll())
 print(VidList.LastError())

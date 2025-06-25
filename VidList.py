@@ -1,4 +1,4 @@
-from .lib import VList
+import VideoList
 
 sz_t    = int
 idx_t   = int
@@ -6,37 +6,37 @@ err_t   = int
 
 # Error msg
 def LastError() -> str:
-    return VList.LastError()
+    return VideoList.LastError()
 
 # Always returns error value.
 def ErrVal() -> err_t:
-    return VList.ErrVal()
+    return VideoList.ErrVal()
 
 # Get the capacity of the list.
 def GetCapacity() -> sz_t:
-    return VList.GetCap()
+    return VideoList.GetCap()
 
 def SetCapacity(cap: int) -> sz_t:
-    return VList.SetCap(cap)
+    return VideoList.SetCap(cap)
 
 def Append(a : str) -> sz_t:
-    return VList.Append(a) 
+    return VideoList.Append(a) 
 
 def Remove(index_begin: idx_t, index_end: idx_t) -> sz_t | err_t:
-    return VList.Remove(index_begin, index_end)
+    return VideoList.Remove(index_begin, index_end)
 
 def Swap(a: int, b: int) -> int:
-    return VList.Swap(a, b)
+    return VideoList.Swap(a, b)
 
 def Set(obj: int, a: str) -> int:
-    return VList.Set(obj, a)
+    return VideoList.Set(obj, a)
 
 # kills the first element
 def Pop() -> int:
-    return VList.Pop()
+    return VideoList.Pop()
 
 def Get(obj: int) -> str:
-    return VList.Get(obj)
+    return VideoList.Get(obj)
 
 def GetAll() -> list[str]:
-    return VList.GetAll()
+    return VideoList.GetAll()
