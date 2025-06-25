@@ -41,8 +41,7 @@ jobs:
         -S./VideoList/VidList 
         -GNinja -DCMAKE_C_COMPILER=clang 
         -DCMAKE_CXX_COMPILER=clang++ 
-        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=../VideoList/lib
-        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=../VideoList/lib
+        -DOUTDIR=../VideoList/lib
 
     - name: Build
       run: |
