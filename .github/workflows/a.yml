@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: 'master'
+        ref: 'separation'
         fetch-depth: '0'
 
     - name: Set reusable strings
