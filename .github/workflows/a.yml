@@ -1,13 +1,13 @@
 name: Test on Native
 on:
   push:
-    branches: [separation]
+    branches: [master]
 
 permissions: write-all
 
 jobs:
   test-compiler-majours:
-    runs-on: self-hosted
+    runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
@@ -33,25 +33,31 @@ jobs:
       
     - name: Pybind11 install
       run: > 
-        git clone https://github.com/ae3f-devel/VidList ./VideoList/VidList
-        
-    - name: Setup Python
-      uses: actions/setup-python@v5.6.0
-      with:
-        python-version: 3.13
+        git clone https://github.com/pybind/pybind11 submod
         
     - name: Configure CMake
-      run: cmake -B build -S./VideoList/VidList -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DOUTDIR=../lib
-
+      run: >
+        cmake -B build -S . -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
     - name: Build
       run: |
         cmake --build ./build
     - name: Test
       run: |
         python ./Test.py
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-output-${{ matrix.os }}
-        path: ./VideoList/lib/*
-
+    - name: Configure Git
+      run: |
+        git config user.name "BOT"
+        git config user.email "a@a.com"
+    - name: Git Add Build Output
+      run: |
+        git add .
+    - name: Git Commit Build
+      run: |
+        git commit -m "[CI/CD] Generated plugin build automation"
+    - name: Push Changes
+      run: |
+        git fetch
+        git pull
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
