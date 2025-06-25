@@ -61,6 +61,6 @@ jobs:
       run: |
         git fetch
         git pull
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic file
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
