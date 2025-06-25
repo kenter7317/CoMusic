@@ -1,7 +1,7 @@
 name: Test on Native
 on:
   push:
-    branches: [master]
+    branches: [file]
 
 permissions: write-all
 
@@ -12,12 +12,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]            
 
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: 'master'
+        ref: 'file'
         fetch-depth: '0'
 
     - name: Set reusable strings
@@ -29,11 +29,13 @@ jobs:
     - name: Pybind11 install
       run: > 
         git clone https://github.com/pybind/pybind11 submod
+
+    - name: pip
+      run: pip install pybind11
         
     - name: Configure CMake
       run: >
         cmake -B build -S . -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
-
     - name: Build
       run: |
         cmake --build ./build
@@ -59,6 +61,6 @@ jobs:
       run: |
         git fetch
         git pull
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic master
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic file
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
