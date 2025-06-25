@@ -25,6 +25,10 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Setup Python
+      uses: actions/setup-python@v5.6.0
+      
     - name: Pybind11 install
       run: > 
         git clone https://github.com/pybind/pybind11 submod
