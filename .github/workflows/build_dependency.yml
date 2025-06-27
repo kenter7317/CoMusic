@@ -1,4 +1,4 @@
-name: Test on Native
+name: build_dependency
 on:
   push:
     branches: ${{ github.ref }}
@@ -7,15 +7,16 @@ permissions: write-all
 
 jobs:
   test-compiler-majours:
-    runs-on: self-hosted
+    runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
-      
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: 'test-workflow'
+        ref: ${{ github.ref }}
         fetch-depth: '1'
 
     - name: Set reusable strings
@@ -46,4 +47,6 @@ jobs:
       with:
         name: build-output-${{ matrix.os }}
         path: ./VideoList/lib/*
+
+
 
