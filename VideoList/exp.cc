@@ -96,7 +96,7 @@ unsigned Append(const char *str) {
 }
 
 unsigned Remove(unsigned begin, unsigned end) {
-	if (begin > end)
+	if (begin >= end)
 		return 0;
 
 	if (!LPSTR) {
@@ -118,7 +118,7 @@ unsigned Remove(unsigned begin, unsigned end) {
 		LSTR(ii).swap(LSTR(ii - (end - begin)));
 	}
 
-	SIZE = end - begin;
+	SIZE -= end - begin;
 	return SIZE - end;
 }
 
