@@ -138,31 +138,36 @@ class TestVideoList(unittest.TestCase):
         # This is likely a bug in the C++ implementation.
         print("Note: Pop implementation seems to only shift the start index, not resize.")
 
-    def test_remove_bug(self):
-        """Test the Remove functionality, which appears to have bugs."""
-        print("Testing Remove (and its suspected bugs)...")
+    def test_remove_size_check(self):
+        """Test the Remove functionality, focusing on the size calculation."""
+        print("Testing Remove (size check)...")
         VideoList.Append("a")
         VideoList.Append("b")
         VideoList.Append("c")
         VideoList.Append("d")
+        VideoList.Append("e") # size is 5
 
-        # The C++ code for Remove has 'SIZE = end - begin;', which is incorrect.
-        # It should be 'SIZE -= (end - begin)'.
-        # Let's test Remove(1, 2) -> should remove "b"
-        print("Calling Remove(1, 2) on ['a', 'b', 'c', 'd']")
-        VideoList.Remove(1, 2)
+        # Confirm initial size is 5 by checking boundaries
+        VideoList.ClearLastError()
+        self.assertEqual(VideoList.Get(4), "e")
+        self.assertEqual(VideoList.Get(5), "")
+        self.assertIn("[Get] `i` is too big.", VideoList.LastError())
+        VideoList.ClearLastError()
 
-        # Due to the bug, the new size will be 2-1=1.
-        # This means we can only safely access Get(0).
-        # The content is also likely incorrect due to the faulty swap logic.
-        # We can't reliably predict the outcome, so we just note the behavior.
-        print("The 'Remove' function is likely buggy and doesn't behave as expected.")
-        # We can't assert correctness, but we can show it doesn't crash.
-        self.assertTrue(True, "Remove executed without crashing.")
-        # We can check the last error, which should be GOOD if no error was thrown inside.
+        # Remove 2 elements at index 1 and 2 ("b", "c")
+        print("Calling Remove(1, 3) on a list of 5 elements.")
+        VideoList.Remove(1, 3)
+
+        # The new size should be 3.
+        # We can verify this by checking the new boundaries with Get().
+        # Get(2) should now be the last element. Get(3) should be out of bounds.
+        print("Verifying new size is 3 by checking boundaries with Get().")
+        self.assertNotEqual(VideoList.Get(2), "", "Get(2) should be accessible.")
         self.assertEqual(VideoList.LastError(), "GOOD")
-        pass
-    pass
+
+        self.assertEqual(VideoList.Get(3), "", "Get(3) should be out of bounds.")
+        self.assertIn("[Get] `i` is too big.", VideoList.LastError())
+        print("Size check passed. The content after removal is not tested due to faulty shift logic.")
 
 
 if __name__ == '__main__':
