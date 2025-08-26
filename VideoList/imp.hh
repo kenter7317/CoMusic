@@ -15,7 +15,7 @@ unsigned Swap(unsigned, unsigned);
 unsigned Set(unsigned, const char *);
 void Pop();
 
-const std::string Get(unsigned);
-const std::vector<std::string> &GetAll();
+void ClearLastError();
 
+const std::string Get(unsigned);
 #endif

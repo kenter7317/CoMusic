@@ -4,18 +4,18 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(VideoList, m) {
-  m.doc() = "Video List";
-  m.def("LastError", &LastError, "Last Error as string");
-  m.def("ErrVal", &ErrVal, "Error value. Returns unsigned -1.");
-  m.def("Capacity", &GetCap, "Get current capacity.");
-  m.def("SetCapacity", &SetCap, "Set current capacity.");
-  m.def("Append", &Append, "Append a string");
-  m.def("Remove", &Remove, "Remove from first index to last index.");
-  m.def("Swap", &Swap, "Swap the values of two.");
-  m.def("Set", &Set, "Set the values of index.");
-  m.def("Get", &Get, "Get one value");
-  m.def("GetAll", &GetAll, "Get all values");
-  m.def("Pop", &Pop, "Remove the first one.");
+	m.doc() = "Video List";
+	m.def("LastError", &LastError, "Last Error as string");
+	m.def("ErrVal", &ErrVal, "Error value. Returns unsigned -1.");
+	m.def("Capacity", &GetCap, "Get current capacity.");
+	m.def("SetCapacity", &SetCap, "Set current capacity.");
+	m.def("Append", &Append, "Append a string");
+	m.def("Remove", &Remove, "Remove from first index to last index.");
+	m.def("Swap", &Swap, "Swap the values of two.");
+	m.def("Set", &Set, "Set the values of index.");
+	m.def("Get", &Get, "Get one value");
+	m.def("Pop", &Pop, "Remove the first one.");
+	m.def("ClearLastError", &ClearLastError, "Clears the error msg.");
 }
 
 #include "str.hh"
@@ -35,145 +35,148 @@ static str *LPSTR = 0;
 #define LSTR(i) LPSTR[LPSTRIDX(i)]
 
 unsigned GetCap() { return CAP; }
+
+void ClearLastError() 
+{
+	LastErrMsg = "GOOD";
+}
+
 void SetCap(unsigned sz) {
-  str *d = new str[sz]();
-  if (!d) {
-    LastErrMsg = "[LPSTRRESIZE] Resizing has failed.";
-    return;
-  }
+	if(!LPSTR) {
+		LPSTR = new str[sz]();
+		SIZE = 0;
+		CAP = sz;
+		IDX = 0;
+		return;
+	}
 
-  SIZE = sz < SIZE ? sz : SIZE;
+	if(sz == 0) {
+		if(LPSTR) delete[] LPSTR;
+		LPSTR = 0;
+		IDX = CAP = 0;
+		SIZE = 0;
+		return;
+	}
 
-  for (unsigned i = 0; i < SIZE; i++) {
-    d[i].swap(LPSTR[(IDX + i % CAP)]);
-  }
+	str *d = new str[sz]();
+	if (!d) {
+		LastErrMsg = "[LPSTRRESIZE] Resizing has failed.";
+		return;
+	}
 
-  IDX = 0;
-  CAP = sz;
+	SIZE = sz < SIZE ? sz : SIZE;
 
-  if (LPSTR)
-    delete LPSTR;
-  LPSTR = d;
+	if(LPSTR) for (unsigned i = 0; i < SIZE; i++) {
+		d[i].swap(LPSTR[((IDX + i) % CAP)]);
+	}
+
+	IDX = 0;
+	CAP = sz;
+
+	if(LPSTR) delete[] LPSTR;
+	LPSTR = d;
 }
 unsigned Size() { return SIZE; }
 unsigned Append(const char *str) {
-  if (SIZE == CAP) {
-    LastErrMsg = "[Append] List is full.";
-    return -1;
-  }
+	if (SIZE == CAP) {
+		LastErrMsg = "[Append] List is full.";
+		return -1;
+	}
 
-  if (!LPSTR) {
-    SIZE = CAP = IDX = 0;
-    LastErrMsg = "[Append] LPSTR is null.";
-    return -1;
-  }
+	if (!LPSTR) {
+		SIZE = CAP = IDX = 0;
+		LastErrMsg = "[Append] LPSTR is null.";
+		return -1;
+	}
 
-  LSTR(SIZE).a[0] = str;
-  SIZE++;
+	LSTR(SIZE).setstr(str);
+	SIZE++;
 
-  return SIZE - 1;
+	return SIZE - 1;
 }
 
 unsigned Remove(unsigned begin, unsigned end) {
-  if (begin > end)
-    return 0;
+	if (begin > end)
+		return 0;
 
-  if (!LPSTR) {
-    SIZE = CAP = IDX = 0;
-    LastErrMsg = "[Remove] LPSTR is null.";
-    return -1;
-  }
+	if (!LPSTR) {
+		SIZE = CAP = IDX = 0;
+		LastErrMsg = "[Remove] LPSTR is null.";
+		return -1;
+	}
 
-  for (unsigned i = 0; i < SIZE - end; i++) {
-    const unsigned ii = i + CAP;
+	for (unsigned i = 0; i < SIZE - end; i++) {
+		const unsigned ii = i + CAP;
 
-    /*
-     * end - 1 == EIDX
-     * begin == BIDX
-     * DELIVERY COUNT: CAP - EIDX - 1 -> CAP - end
-     * FEE: (EIDX - BIDX) + 1 -> end - BIDX
-     * [1][0][0][1][1]
-     */
-    LSTR(ii).swap(LSTR(ii - (end - begin)));
-  }
+		/*
+		 * end - 1 == EIDX
+		 * begin == BIDX
+		 * DELIVERY COUNT: CAP - EIDX - 1 -> CAP - end
+		 * FEE: (EIDX - BIDX) + 1 -> end - BIDX
+		 * [1][0][0][1][1]
+		 */
+		LSTR(ii).swap(LSTR(ii - (end - begin)));
+	}
 
-  SIZE = end - begin;
-  return SIZE - end;
+	SIZE = end - begin;
+	return SIZE - end;
 }
+
 unsigned Swap(unsigned a, unsigned b) {
-  if (a >= SIZE) {
-    LastErrMsg = "[Swap] `a` is too big.";
-    return -1;
-  }
+	if (a >= SIZE) {
+		LastErrMsg = "[Swap] `a` is too big.";
+		return -1;
+	}
 
-  if (b >= SIZE) {
-    LastErrMsg = "[Swap] `b` is too big.";
-    return -1;
-  }
+	if (b >= SIZE) {
+		LastErrMsg = "[Swap] `b` is too big.";
+		return -1;
+	}
 
-  if (!LPSTR) {
-    SIZE = CAP = IDX = 0;
-    LastErrMsg = "[Swap] LPSTR is null.";
-    return -1;
-  }
+	if (!LPSTR) {
+		SIZE = CAP = IDX = 0;
+		LastErrMsg = "[Swap] LPSTR is null.";
+		return -1;
+	}
 
-  LSTR(a).swap(LSTR(b));
-  return 0;
+	LSTR(a).swap(LSTR(b));
+	return 0;
 }
 unsigned Set(unsigned i, const char *str) {
-  if (i >= SIZE) {
-    LastErrMsg = "[Set] `i` is too big.";
-    return -1;
-  }
+	if (i >= SIZE) {
+		LastErrMsg = "[Set] `i` is too big.";
+		return -1;
+	}
 
-  if (!LPSTR) {
-    SIZE = CAP = IDX = 0;
-    LastErrMsg = "[Set] LPSTR is null.";
-    return -1;
-  }
+	if (!LPSTR) {
+		SIZE = CAP = IDX = 0;
+		LastErrMsg = "[Set] LPSTR is null.";
+		return -1;
+	}
 
-  *LSTR(i).a = str;
+	LSTR(i).setstr(str);
 
-  return i;
+	return i;
 }
 
 const std::string Get(unsigned i) {
-  if (i >= SIZE) {
-    LastErrMsg = "[Get] `i` is too big.";
-    return "";
-  }
+	if (i >= SIZE) {
+		LastErrMsg = "[Get] `i` is too big.";
+		return "";
+	}
 
-  if (!LPSTR) {
-    SIZE = CAP = IDX = 0;
-    LastErrMsg = "[Get] LPSTR is null.";
-    return "";
-  }
+	if (!LPSTR) {
+		SIZE = CAP = IDX = 0;
+		LastErrMsg = "[Get] LPSTR is null.";
+		return "";
+	}
 
-  return *LSTR(i).a;
+	return LSTR(i).a;
 }
 
 void Pop() {
-  IDX++;
-  if (CAP == IDX) {
-    IDX = 0;
-  }
-}
-
-const std::vector<std::string> &GetAll() {
-  static std::vector<std::string> D{};
-
-  if (!LPSTR) {
-    SIZE = CAP = IDX = 0;
-    LastErrMsg = "[GetAll] LPSTR is null.";
-    D = {};
-    return D;
-  }
-
-  if (SIZE > D.size())
-    D.resize(SIZE);
-
-  for (unsigned i = 0; i < SIZE; i++) {
-  }
-
-  return D;
+	IDX++;
+	if (CAP == IDX) {
+		IDX = 0;
+	}
 }
