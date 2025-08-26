@@ -1,7 +1,7 @@
 name: Test on Native
 on:
   push:
-    branches: [file]
+    branches: [master]
 
 permissions: write-all
 
@@ -12,12 +12,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]            
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: 'file'
+        ref: 'master'
         fetch-depth: '0'
 
     - name: Set reusable strings
@@ -26,12 +26,14 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+    - name: Setup Python
+      uses: actions/setup-python@v5.6.0
+      with:
+        python-version: 3.13
+      
     - name: Pybind11 install
       run: > 
         git clone https://github.com/pybind/pybind11 submod
-
-    - name: pip
-      run: pip install pybind11
         
     - name: Configure CMake
       run: >
@@ -39,28 +41,23 @@ jobs:
     - name: Build
       run: |
         cmake --build ./build
-
     - name: Test
       run: |
         python ./Test.py
-
     - name: Configure Git
       run: |
         git config user.name "BOT"
         git config user.email "a@a.com"
-
     - name: Git Add Build Output
       run: |
         git add .
-
     - name: Git Commit Build
       run: |
         git commit -m "[CI/CD] Generated plugin build automation"
-
     - name: Push Changes
       run: |
         git fetch
         git pull
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic file
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kenter7317/CoMusic master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
