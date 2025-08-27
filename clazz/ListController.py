@@ -21,7 +21,7 @@ class ListController:
         # todo return
         pass
 
-    def controll_list(self):
+    def control_list(self):
         pass
 
     async def controllRequest(self, request):

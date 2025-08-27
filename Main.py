@@ -1,11 +1,9 @@
 import os
 
-from PyQt5.QtCore import QUrlQuery, QUrl, Qt, QObject, pyqtSlot, pyqtSignal
-from PyQt5.QtWebChannel import QWebChannel
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QListWidget, QListView, QDockWidget
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal
+from PyQt5.QtWidgets import QApplication, QMainWindow
+
 import sys
-import VideoList
 import clazz.PluginRepository
 from clazz.ListController import ListController
 
@@ -15,18 +13,12 @@ class Backend(QObject):
     repository : clazz.PluginRepository
     controller : ListController
 
-    @pyqtSlot(str)
-    def receiveMessage(self, msg):
-        print(f"JS로부터 메시지 받음: {msg}")
-
-    # Python에서 JS로 신호 보낼 수도 있음
-    sendMessage = pyqtSignal(str)
-    def init_plugin_repository(self):
+    def initPluginRepository(self):
         repository = clazz.PluginRepository.PluginRepository()
         pass
 
 
-    def init_ListController(self):
+    def initListController(self):
         controller = clazz.ListController.ListController()
         pass
 
@@ -39,8 +31,8 @@ class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         backend = Backend()
-        backend.init_plugin_repository()
-        backend.init_ListController()
+        backend.initPluginRepository()
+        backend.initListController()
         self.create_ui()
         # browser = QWebEngineView()
         # html_path = os.path.abspath("Embed.html") # TODO WEBCHANNEL

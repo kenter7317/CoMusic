@@ -1,6 +1,6 @@
+import asyncio
 from inspect import stack
 from typing import final
-from urllib.request import Request
 
 from clazz.ControllerService import ControllerService
 from clazz.ListController import ListController
@@ -12,12 +12,14 @@ class ControlHandler:
         self.isProcessing = False
         self.controller = controller
         self.que = []
-        self.que.append(request)
+        self.append(request)
         if stack()[1].frame.f_locals['self'] == ControllerService:
-          service = stack()[1].frame.f_locals['self']
-          service.setControlHandler(self)
+          self.service = stack()[1].frame.f_locals['self']
+          self.service.setControlHandler(self)
         while self.que:
             self.handle(self.que.pop(0))
+        asyncio.sleep(5)
+        self.service.emptyHandler()
 
 
     def handle(self, request):
