@@ -30,5 +30,5 @@
 # Get
 > Get one.
 
-# GetAll
-> Get all.
+# ClearLastError
+> Clears the last error.
