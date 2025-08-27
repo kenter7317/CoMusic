@@ -32,3 +32,7 @@ class ControllerService:
                 self.handler.append(request)
             else:
                 ControlHandler(self.controller, request)
+
+    def response(self, request, destination):
+        with self.lock:
+            #todo
